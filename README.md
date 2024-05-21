@@ -1,14 +1,18 @@
-# Cloudwatch
+EC2 Memory and Disk Monitoring
+Monitor EC2 memory and disk utilization using CloudWatch. This guide demonstrates how to set up AWS EC2 monitoring with CloudWatch, focusing on memory and disk utilization.
 
-EC2 Memory Disk Monitoring
-Monitor EC2 Memory and Disk Utilisation using CloudWatch | AWS EC2 Monitoring with Cloudwatch | Monitor Memory and Disk Utilisation using CloudWatch | AWS CloudWatch Demo
+Steps
+Step 1: Create an AWS EC2 Instance and Attach an IAM Role
+Ensure the IAM role has permissions for CloudWatch and SSM Full Access.
 
-Steps:
-Step 1: Create an AWS EC2 & Attach IAM Role which have permissions of CloudWatch and SSM Full Access.
-Step 2: Create a Parameter in Systems Manger with the name "/alarm/AWS-CWAgentLinConfig" and store the value which is Below.
-Step 3: Apply Script on Server
+Step 2: Create a Parameter in Systems Manager
+Name the parameter "/alarm/AWS-CWAgentLinConfig" and store the configuration value provided below.
 
-Commands that needs to be added in Userdata Section:
+Step 3: Apply the Script on the Server
+Add the following commands to the User Data section when launching your EC2 instance:
+
+bash
+Copy code
 #!/bin/bash
 sudo apt update -y
 sudo apt install wget unzip zip -y
@@ -16,12 +20,14 @@ wget https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCl
 unzip AmazonCloudWatchAgent.zip
 sudo ./install.sh
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:/alarm/AWS-CWAgentLinConfig -s
-Check if EC2 Instance has CWAgent Installed or not:
+Verify the CloudWatch Agent installation:
+
+bash
+Copy code
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
-
-
-**Value for the SSM Parameter (/alarm/AWS-CWAgentLinConfig):**
-
+Value for the SSM Parameter (/alarm/AWS-CWAgentLinConfig):
+json
+Copy code
 {
 	"metrics": {
 		"append_dimensions": {
@@ -43,3 +49,11 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a 
 		}
 	}
 }
+This configuration enables CloudWatch to collect memory and disk usage metrics from your EC2 instance every 60 seconds.
+
+
+
+
+
+
+
