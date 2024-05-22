@@ -27,7 +27,7 @@ Copy code
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
 Value for the SSM Parameter (/alarm/AWS-CWAgentLinConfig):
 json
-Copy code
+
 {
 	"metrics": {
 		"append_dimensions": {
@@ -40,15 +40,20 @@ Copy code
 				],
 				"metrics_collection_interval": 60
 			},
-            "disk": {
+			"disk": {
 				"measurement": [
-                     "disk_used_percent"
+					"disk_used_percent",
+					"used_percent"
 				],
-				"metrics_collection_interval": 60
+				"metrics_collection_interval": 60,
+				"resources": [
+					"/"
+				]
 			}
 		}
 	}
 }
+
 This configuration enables CloudWatch to collect memory and disk usage metrics from your EC2 instance every 60 seconds.
 
 
